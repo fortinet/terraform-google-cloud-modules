@@ -1,4 +1,21 @@
-## 1.4.5 (Unreleased)
+## 1.4.6 (Unreleased)
+
+
+## 1.4.5 (July 1, 2026)
+
+IMPROVEMENTS:
+* Module `modules/fortigate/fgt_asg_with_function`:
+  * Improved the FortiGate session connectin logic;
+  * Changed the FortiGate bootstrap script to the MIME format;
+  * Supported UMS feature with FGT 8.0.0 PAYG.
+* Module `modules/fortinet/generic_vm_standalone`:
+  * Added the latest versions for every Fortinet product;
+* Example `examples/autoscale_fgt_as_hub`:
+  * Improved documentation consistency across example projects;
+  * Supported everything changed in Module `fgt_asg_with_function`.
+* Example `examples/autoscale_fgt_lb_sandwich`:
+  * Improved documentation consistency across example projects;
+  * Supported everything changed in Module `fgt_asg_with_function`.
 
 ## 1.4.4 (May, 8, 2026)
 

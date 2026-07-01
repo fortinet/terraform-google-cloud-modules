@@ -1,4 +1,4 @@
-![Fortinet logo|](https://upload.wikimedia.org/wikipedia/commons/6/62/Fortinet_logo.svg)
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/62/Fortinet_logo.svg" alt="Fortinet LOGO" width="300" />
 
 ## Terraform modules for Fortinet VM products on GCP
 

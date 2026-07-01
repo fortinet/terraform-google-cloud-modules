@@ -4,7 +4,7 @@ Autoscale FortiGate with Load Balancer Sandwich offers a dynamically scalable ne
 
 ## Architecture
 
-The "autoscale_fgt_lb_sandwich" Terraform project comprises an `Auto-Scale FortiGate Group`, two `VPCs`, an `External Load Balancer`, and an `Internal Load Balancer`. By default, it uses `Google Cloud Function` and `Firestore Database` to designate a primary FortiGate and to manage license deployment across the FortiGates. It uses `Google Bucket Storage` to store cloud function code and license files. If `fmg_integration.ums` is configured, the project uses FortiManager User Managed Scaling (UMS) instead. In UMS mode, Cloud Function and Firestore resources are skipped, and FortiManager handles device onboarding, license installation, and autoscale management.
+The "autoscale_fgt_lb_sandwich" Terraform project comprises an `Auto-Scale FortiGate Group`, two `VPCs`, an `External Load Balancer`, and an `Internal Load Balancer`. By default, it uses `Google Cloud Function` and `Firestore Database` to designate a primary FortiGate and to manage license deployment across the FortiGates. It uses `Google Bucket Storage` to store Cloud Function code and license files. If `fmg_integration.ums` is configured, the project uses FortiManager User Managed Scaling (UMS) instead. In UMS mode, Cloud Function and Firestore resources are skipped, and FortiManager handles device onboarding, license installation, and autoscale management.
 
 **Architecture Diagram:**
 ![Diagram](./images/autoscale_fgt_lb_sandwich.svg)
@@ -55,12 +55,13 @@ You can find the template in [`/examples/autoscale_fgt_lb_sandwich/terraform.tfv
 project = "<YOUR-OWN-VALUE>"        # Your GCP project name.
 prefix  = "lb-sandwich"             # Prefix of the objects in this example. It should be unique to avoid name conflict between examples.
 region  = "<YOUR-OWN-VALUE>"        # e.g., "us-central1"
+# zone  = "<YOUR-OWN-VALUE>"        # e.g., "us-central1-a". Deploy FortiGates in a single zone. For higher availability, use "zones" instead.
 zones   = ["<YOUR-OWN-VALUE1>",     # e.g., ["us-central1-b", "us-central1-c"]. Deploy FortiGates across multiple zones.
-           "<YOUR-OWN-VALUE2>"]     # If zones is empty, GCP will select 3 zones for you.
+           "<YOUR-OWN-VALUE2>"]     # Variable "zone" is mutually exclusive with variable "zones". If neither is specified, GCP will select 3 zones for you.
 
 # IAM variables (Optional)
 # service_account_email = "example@<your-project-name>.iam.gserviceaccount.com"
-# The e-mail address of the service account. This service account will control the cloud function created by this project.
+# The email address of the service account. This service account will control the Cloud Function created by this project.
 # This service account should already have "roles/datastore.user" and "roles/compute.viewer".
 # If this variable is not specified, the default Google Compute Engine service account is used.
 ```
@@ -69,7 +70,7 @@ Modify these variables based on your needs.
 `service_account_email` should comply with the least privilege principle.
 You can [create dedicated service account by using our GCP module](https://github.com/fortinetdev/terraform-google-cloud-modules/blob/main/docs/guide_gcp_modules.md#create-dedicated-service-account).
 
-If you want to deploy more than one examples, please make sure the `prefix` of those examples are different.
+If you want to deploy more than one example, please make sure the `prefix` values of those examples are different.
 
 #### FortiGate Variables:
 ```
@@ -81,12 +82,12 @@ fgt_has_public_ip = false           # If set to true, port1 of all FGTs will hav
 # FortiGate image.
 # You can use "image_type" to deploy the latest public FortiGate image, or use "image_source" to deploy the custom image.
 # One of the variables "image_type" and "image_source" must be provided, otherwise an error occurs.
-# If both are provided, "image_source" will be used, and "image_type" will be ignored.
+# If both are provided, "image_source" takes precedence and "image_type" is ignored.
 image_type   = "fortigate-76-byol"  # The type of public FortiGate Image.
                                     # fortigate-76-byol: bring your own licenses.
                                     # In the default Cloud Function mode, you need to specify cloud_function->license_source.
                                     # In UMS mode, FortiManager handles license installation.
-                                    # fortigate-76-payg: pay as you go, you don't need to specify license_source.
+                                    # fortigate-76-payg: pay as you go. You do not need to specify license_source.
 # image_source = "projects/fortigcp-project-001/global/images/fortinet-fgt-760-20240726-001-w-license"  # The source of the custom image.
 
 # Additional disk (Optional)
@@ -105,7 +106,7 @@ You can find more supported machine types [here](https://docs.fortinet.com/docum
 
 `fgt_has_public_ip` means whether to allow FortiGate to have a public IP. If set to true, port1 of all FGTs will have a public IP.
 
-The variable `image_type` and variable `image_source` are mutually exclusive, only one variable can be specified. Specify `image_type` to deploy the latest public FortiGate image, or `image_source` to use a custom image.
+Specify `image_type` to deploy the latest public FortiGate image, or `image_source` to use a custom image. One of `image_type` and `image_source` must be provided. If both are provided, `image_source` takes precedence.
 
 `image_type` represents the type of FGT image. You can use the command `gcloud compute images list --project=fortigcp-project-001 --filter="family:fortigate*" --format="table[no-heading](family)" | sort | uniq` to get all possible values.
 
@@ -124,7 +125,7 @@ If `additional_disk` is specified, every FGT will have its own log disk, and the
 ```
 external_subnet = "192.168.0.0/22"  # The CIDR of the external VPC for this project. This IP range is used only for FGTs.
 internal_subnet = "192.168.4.0/22"  # The CIDR of the internal VPC for this project. This IP range is used only for FGTs and internal load balancer.
-# protected_vpc = [                 # List of your existing VPCs (The LANs your want to protect). If specified, outbound and inbound traffic from these VPCs will first go through the FGTs.
+# protected_vpc = [                 # List of your existing VPCs (The LANs you want to protect). If specified, outbound and inbound traffic from these VPCs will first go through the FGTs.
 #   {name = "<YOUR-VPC-NAME-1>"},
 #   {name = "<YOUR-VPC-NAME-2>"}
 # ]
@@ -153,33 +154,33 @@ load_balancer = {
 ```
 Parameters for external and internal load balancers. 
 
-You can leave most variables at their default values, except for `internal_lb -> frontend_ip`, which should be in the `internal_subnet` IP range.
+You can leave most variables at their default values, except for `internal_lb -> front_end_ip`, which should be in the `internal_subnet` IP range.
 
 #### Cloud Function Variables:
 This section applies to the default Cloud Function mode. If `fmg_integration.ums` is configured, all parameters under `cloud_function` are ignored.
 
 ```
 cloud_function = {
-  function_ip_range   = "192.168.8.0/28"   # Cloud function needs to have its own CIDR ip range ending with "/28", which cannot be used by other resources.
+  function_ip_range   = "192.168.8.0/28"   # Cloud Function needs to have its own CIDR IP range ending with "/28", which cannot be used by other resources.
   license_source      = "file"             # The source of license if your image_type is "fortigate-xx-byol".
                                            # Possible value: "none", "fortiflex", "file", "file_fortiflex"
   license_file_folder = "./licenses"       # The folder where all ".lic" license files are located.
-  autoscale_psksecret = "<RANDOM-STRING>"  # The secret key used to synchronize information between FortiGates. If not set, the module will randomly generate a 16-character secret key.
-  logging_level       = "INFO"             # Verbosity of logs. Possible values include "NONE", "ERROR", "WARN", "INFO", "DEBUG", and "TRACE".
-  # "fortiflex" parameters is required if license_source is "fortiflex" or "file_fortiflex"
+  autoscale_psksecret = ""                 # The secret key used to synchronize information between FortiGates. If not set, the module will randomly generate a 16-character secret key.
+  logging_level       = "NONE"             # Verbosity of logs. Possible values include "NONE", "ERROR", "WARN", "INFO", "DEBUG", and "TRACE".
+  # The "fortiflex" block is required if license_source is "fortiflex" or "file_fortiflex".
   # fortiflex = {
   #   retrieve_mode = "use_active"         # How to retrieve an existing fortiflex license (entitlement)
   #                                        # "use_active": Retrieves "ACTIVE" or "PENDING" licenses. If the license is released, the license keeps "ACTIVE".
   #                                        # "use_stopped" (default behavior): Retrieves "STOPPED", "EXPIRED" or "PENDING" licenses, and changes them to "ACTIVE". If the license is released, change the license to "STOPPED".
   #   username      = "<YOUR-OWN-VALUE>"   # The username of your FortiFlex account.
   #   password      = "<YOUR-OWN-VALUE>"   # The password of your FortiFlex account.
-  #   config        = <YOUR-OWN-VALUE>     # The config ID of your FortiFlex configuration.
+  #   config        = <YOUR-OWN-VALUE>     # The configuration ID of your FortiFlex configuration.
   # }
 
-  # This parameter controls the instance that runs the cloud function. For simplicity, it is recommended to use the default value.
+  # This parameter controls the instance that runs the Cloud Function. For simplicity, it is recommended to use the default value.
   service_config = {
     max_instance_count               = 1    # The limit on the maximum number of function instances that may coexist at a given time.
-    max_instance_request_concurrency = 10   # Sets the maximum number of concurrent requests that one cloud function can handle at the same time.
+    max_instance_request_concurrency = 10   # Sets the maximum number of concurrent requests that one Cloud Function can handle at the same time.
                                             # Recommended to set it to no less than the maximum number of FGT instances (variable "autoscaler.max_instances").
     available_cpu                    = "1"  # The number of CPUs used in a single container instance.
     available_memory                 = "1G" # The amount of memory available for a function.
@@ -188,43 +189,43 @@ cloud_function = {
 
   # additional_variables = {}               # Additional Cloud Function Variables
 
-  # The following parameters are optional, and no need to be specified in most of cases
-  # build_service_account_email = "your-name@example.com" # The email address of the service account used to build the cloud function. This account needs to have role "roles/cloudbuild.builds.builder".
+  # The following parameters are optional and do not need to be specified in most cases.
+  # build_service_account_email = "your-name@example.com" # The email address of the service account used to build the Cloud Function. This account needs to have role "roles/cloudbuild.builds.builder".
                                                           # The <PROJECT_NUMBER>@cloudbuild.gserviceaccount.com will be used if it is not specified.
-  # trigger_service_account_email = "your-name@example.com" # The email address of the service account used to trigger the cloud function. This account needs to have role "roles/run.invoker".
+  # trigger_service_account_email = "your-name@example.com" # The email address of the service account used to trigger the Cloud Function. This account needs to have role "roles/run.invoker".
                                                             # The default service account will be used if it is not specified.
 }
 ```
-Cloud Function is used to manage FGT synchronization and inject license into FGT. For more information about the Cloud Function, please check [here](https://github.com/fortinetdev/terraform-google-cloud-modules/blob/main/docs/guide_function.md).
+Cloud Function is used to manage FGT synchronization and inject licenses into FGTs. For more information about the Cloud Function, please check [here](https://github.com/fortinetdev/terraform-google-cloud-modules/blob/main/docs/guide_function.md).
 
-`function_ip_range` is used by cloud function. This IP range needs to end with "/28" and cannot be used by any other resources.
+`function_ip_range` is used by Cloud Function. This IP range needs to end with "/28" and cannot be used by any other resources.
 A static route will be created in the FGT that routes data destined for `cloud_function.function_ip_range` to port1.
 
 `license_source` is the source of your license. If your `image_type` ends with "byol" (bring your own license), you need to specify your license source here. Possible values are
 - "none": Don't inject licenses to FGTs.
-- "file": Injecting licenses based on license files. All license files should be in `license_file_folder` (default value is "./licenses").
-- "fortiflex": Injecting licenses based on FortiFlex. You need to specify the variable `fortiflex` if license_source is "fortiflex".
-- "file_fortiflex": Injecting licenses based on license files first. If all license files are in use, try FortiFlex next.
+- "file": Inject licenses based on license files. All license files should be in `license_file_folder` (default value is "./licenses").
+- "fortiflex": Inject licenses based on FortiFlex. You need to specify the variable `fortiflex` if license_source is "fortiflex" or "file_fortiflex".
+- "file_fortiflex": Inject licenses based on license files first. If all license files are in use, try FortiFlex next.
 
 `autoscale_psksecret` is the secret key used to synchronize information between FortiGates. If not set, this project will randomly generate a 16-character secret key. You can find it in the output.
 
 `logging_level` is used to control the verbosity of logs. Possible values include "NONE", "ERROR", "WARN", "INFO", "DEBUG", and "TRACE". Logs can be viewed in the Google Cloud Logs Explorer. If you set logging_level to "INFO", all logs of "INFO" severity or higher ("INFO", "WARN", "ERROR") will be recorded.
 (The previous variable `"print_debug_msg"` has been deprecated and removed.)
 
-`fortiflex` is required if your `license_source` is "fortiflex".
-The cloud function will retrieve your existing unused FortiFlex entitlements and use them to inject licenses into FortiGates.
+`fortiflex` is required if your `license_source` is "fortiflex" or "file_fortiflex".
+The Cloud Function will retrieve your existing unused FortiFlex entitlements and use them to inject licenses into FortiGates.
 You need to provide your FortiFlex `username` and `password`.
-You also need to provide a FortiGate configuration `config` (A digital number). You can use our fortiflexvm Terraform to [create a FortiGate configuration](https://registry.terraform.io/providers/fortinetdev/fortiflexvm/latest/docs/resources/fortiflexvm_config) and get its config ID. You need to [use this config ID to create entitlements](https://registry.terraform.io/providers/fortinetdev/fortiflexvm/latest/docs/resources/fortiflexvm_entitlements_vm) in advance.
+You also need to provide a FortiGate configuration `config` (a numeric configuration ID). You can use our fortiflexvm Terraform to [create a FortiGate configuration](https://registry.terraform.io/providers/fortinetdev/fortiflexvm/latest/docs/resources/fortiflexvm_config) and get its config ID. You need to [use this config ID to create entitlements](https://registry.terraform.io/providers/fortinetdev/fortiflexvm/latest/docs/resources/fortiflexvm_entitlements_vm) in advance.
 
-`service_config` is a variable that controls the instance on which the cloud function runs. You can increase `max_instance_request_concurrency` to allow multiple cloud function requests to run simultaneously. You need to increase `available_memory` if your `max_instance_request_concurrency` is high and running out of existing memory.
+`service_config` is a variable that controls the instance on which the Cloud Function runs. You can increase `max_instance_request_concurrency` to allow multiple Cloud Function requests to run simultaneously. You need to increase `available_memory` if your `max_instance_request_concurrency` is high and running out of existing memory.
 
 `additional_variables` specifies additional variables used by Cloud Function. Some variables are too trivial or **not recommended to be changed**. You can specify them here to overwrite the behavior of the Cloud Function for more customization.
 
-To get advice on how to specify `additional_variables` to suit your custom needs, please create an GitHub issue at https://github.com/fortinetdev/terraform-google-cloud-modules
+To get advice on how to specify `additional_variables` to suit your custom needs, please create a GitHub issue at https://github.com/fortinetdev/terraform-google-cloud-modules
 
 - "HA_SYNC_INTERFACE": (default: "port2") The port used for HA synchronization.
-- "CLOUD_FUNC_INTERFACE": (default: "port1") Cloud function uses this port to communicate with FortiGates. If CLOUD_FUNC_INTERFACE is not "port1", please also add corresponding route rules in `config_script` (or `config_file`) so FortiGate can respond to the Cloud Function requests.
-- "FIRESTORE_DATABASE": (default: "(default)") The Firestore database that Cloud Function used to store data.
+- "CLOUD_FUNC_INTERFACE": (default: "port1") Cloud Function uses this port to communicate with FortiGates. If CLOUD_FUNC_INTERFACE is not "port1", please also add corresponding route rules in `config_script` (or `config_file`) so FortiGate can respond to the Cloud Function requests.
+- "FIRESTORE_DATABASE": (default: "(default)") The Firestore database that Cloud Function uses to store data.
 
 ```
 cloud_function = {
@@ -245,7 +246,7 @@ cloud_function = {
 autoscaler = {
   max_instances     = 4     # The maximum number of FGT instances
   min_instances     = 2     # The minimum number of FGT instances
-  cooldown_period   = 360   # Specify how long (seconds) it takes for FGT to initialize from boot time until it is ready to serve.
+  cooldown_period   = 600   # Specify how long (seconds) it takes for FGT to initialize from boot time until it is ready to serve.
   cpu_utilization   = 0.8   # Autoscaling signal. If CPU utilization is above this value, Google Cloud will create new FGT instances.
   autohealing = {              # Parameters about autohealing. Autohealing recreates VM instances if your application cannot be reached by the health check.
     health_check_port = 8008   # The port used for health checks by autohealing.
@@ -260,9 +261,9 @@ Autoscaler is used to control when to autoscale and control the number of FortiG
 
 `max_instances` is the maximum number of FGT instances you want to create.
 
-`min_instances` is the minimum number of FGT instances. Your auto-scale FortiGate Group will at least have `min_instances` FGTs. This number can not be less than 2.
+`min_instances` is the minimum number of FGT instances. Your auto-scale FortiGate Group will at least have `min_instances` FGTs. This number cannot be less than 2.
 
-`cooldown_period` specify how long (seconds) it takes for FGT to initialize from boot time until it is ready to serve. Please increase this value if the instance takes longer to become ready, especially when `additional_disk` is configured.
+`cooldown_period` specifies how long (seconds) it takes for FGT to initialize from boot time until it is ready to serve. Please increase this value if the instance takes longer to become ready, especially when `additional_disk` is configured.
 
 `cpu_utilization` is the autoscaling signal. If CPU utilization is above this value, Google Cloud will create new FGT instances. Google Cloud will also delete idle FGT instances if CPU utilization is low for a long time.
 
@@ -347,7 +348,7 @@ fmg_integration = {
   ums = {
     autoscale_psksecret = "<RANDOM-STRING>"       # The secret key used to synchronize information between FortiGates.
     fmg_reg_password    = "<FMG_REGISTER_PASSWORD>"  # The password used to register the FortiGate to the FortiManager.
-    sync_interface      = "port1"                 # The interface used to synchronize information between FortiGates.
+    sync_interface      = "port1"                 # The interface used to sync with FortiManager.
     api_key             = "<FMG_API_KEY>"         # FortiManager API key. Required when the FortiGate image is BYOL.
   }
 }
@@ -363,11 +364,11 @@ In UMS mode, configure BYOL license pools or FortiFlex on FortiManager. All para
 
 2. **(RECOMMENDED)** Set `image_type` as "fortigate-xx-byol" (e.g, "fortigate-76-byol"). Configure `cloud_function->license_source` as "file", and place your license files (.lic files) in the `cloud_function->license_file_folder` folder.
 
-3. Set `image_type` as "fortigate-xx-byol" (e.g, "fortigate-76-byol"). Configure `cloud_function->license_source` as "fortiflex" and properly set `cloud_function->fortiflex`. Use `cloud_function->fortiflex->config` to specify a digital ID of your configuration.
+3. Set `image_type` as "fortigate-xx-byol" (e.g, "fortigate-76-byol"). Configure `cloud_function->license_source` as "fortiflex" and properly set `cloud_function->fortiflex`. Use `cloud_function->fortiflex->config` to specify the numeric configuration ID of your configuration.
   - GUI method: Visit the [fortiflex platform](https://support.fortinet.com/flexvm/), create a "FortiGate Virtual Machine" configuration and generate several entitlements based on this configuration.  
   - Terraform method: You can use our fortiflexvm Terraform to [create a FortiGate configuration](https://registry.terraform.io/providers/fortinetdev/fortiflexvm/latest/docs/resources/fortiflexvm_config) and get its config ID. You need to [use this config ID to create entitlements](https://registry.terraform.io/providers/fortinetdev/fortiflexvm/latest/docs/resources/fortiflexvm_entitlements_vm) in advance.
 
-4. Set `image_type` as "fortigate-xx-byol" (e.g, "fortigate-76-byol"). Configure `cloud_function->license_source` as "file_fortiflex". This setting prioritizes using files to inject licenses into FortiGates initially. If file licenses are depleted, it will use "fortiflex" method.
+4. Set `image_type` as "fortigate-xx-byol" (e.g, "fortigate-76-byol"). Configure `cloud_function->license_source` as "file_fortiflex". This setting prioritizes using files to inject licenses into FortiGates initially. If file licenses are depleted, it will use the "fortiflex" method.
 
 ## Configure FortiGates after deploying
 

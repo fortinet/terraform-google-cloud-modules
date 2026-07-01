@@ -67,6 +67,7 @@
         "7.4.9": "projects/fortigcp-project-001/global/images/fortinet-fgt-749-20251003-001-w-license",
         "7.4.10": "projects/fortigcp-project-001/global/images/fortinet-fgt-7410-20260120-001-w-license",
         "7.4.11": "projects/fortigcp-project-001/global/images/fortinet-fgt-7411-20260129-001-w-license",
+        "7.4.12": "projects/fortigcp-project-001/global/images/fortinet-fgt-7412-20260511-001-w-license",
         "7.6.0": "projects/fortigcp-project-001/global/images/fortinet-fgt-760-20240726-001-w-license",
         "7.6.1": "projects/fortigcp-project-001/global/images/fortinet-fgt-761-20241128-001-w-license",
         "7.6.2": "projects/fortigcp-project-001/global/images/fortinet-fgt-762-20250130-001-w-license",
@@ -74,6 +75,7 @@
         "7.6.4": "projects/fortigcp-project-001/global/images/fortinet-fgt-764-20250902-001-w-license",
         "7.6.5": "projects/fortigcp-project-001/global/images/fortinet-fgt-765-20251215-001-w-license",
         "7.6.6": "projects/fortigcp-project-001/global/images/fortinet-fgt-766-20260129-001-w-license",
+        "7.6.7": "projects/fortigcp-project-001/global/images/fortinet-fgt-767-20260604-001-w-license",
         "8.0.0": "projects/fortigcp-project-001/global/images/fortinet-fgt-800-20260423-001-w-license"
     },
     "fortigate-payg-x64": {
@@ -144,6 +146,7 @@
         "7.4.9": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-749-20251003-001-w-license",
         "7.4.10": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-7410-20260120-001-w-license",
         "7.4.11": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-7411-20260129-001-w-license",
+        "7.4.12": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-7412-20260511-001-w-license",
         "7.6.0": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-760-20240726-001-w-license",
         "7.6.1": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-761-20241128-001-w-license",
         "7.6.2": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-762-20250130-001-w-license",
@@ -151,6 +154,7 @@
         "7.6.4": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-764-20250902-001-w-license",
         "7.6.5": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-765-20251215-001-w-license",
         "7.6.6": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-766-20260129-001-w-license",
+        "7.6.7": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-767-20260604-001-w-license",
         "8.0.0": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-800-20260423-001-w-license"
     },
     "fortigate-byol-arm64": {
@@ -176,12 +180,14 @@
         "7.4.9": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-749-20251003-001-w-license",
         "7.4.10": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-7410-20260120-001-w-license",
         "7.4.11": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-7411-20260129-001-w-license",
+        "7.4.12": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-7412-20260511-001-w-license",
         "7.6.0": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-760-20240726-001-w-license",
         "7.6.1": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-761-20241128-001-w-license",
         "7.6.2": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-762-20250130-001-w-license",
         "7.6.3": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-763-20250423-001-w-license",
         "7.6.5": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-765-20251215-001-w-license",
         "7.6.6": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-766-20260129-001-w-license",
+        "7.6.7": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-767-20260604-001-w-license",
         "8.0.0": "projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-800-20260423-001-w-license"
     },
     "fortigate-payg-arm64": {
@@ -207,12 +213,14 @@
         "7.4.9": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-749-20251003-001-w-license",
         "7.4.10": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-7410-20260120-001-w-license",
         "7.4.11": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-7411-20260129-001-w-license",
+        "7.4.12": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-7412-20260511-001-w-license",
         "7.6.0": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-760-20240726-001-w-license",
         "7.6.1": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-761-20241128-001-w-license",
         "7.6.2": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-762-20250130-001-w-license",
         "7.6.3": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-763-20250423-001-w-license",
         "7.6.5": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-765-20251215-001-w-license",
         "7.6.6": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-766-20260129-001-w-license",
+        "7.6.7": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-767-20260604-001-w-license",
         "8.0.0": "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-800-20260423-001-w-license"
     },
     "fortimanager": {
@@ -277,6 +285,7 @@
         "7.4.8": "projects/fortigcp-project-001/global/images/fortinet-fmg-748-20251003-001-w-license",
         "7.4.9": "projects/fortigcp-project-001/global/images/fortinet-fmg-749-20260120-001-w-license",
         "7.4.10": "projects/fortigcp-project-001/global/images/fortinet-fmg-7410-20260212-001-w-license",
+        "7.4.11": "projects/fortigcp-project-001/global/images/fortinet-fmg-7411-20260511-001-w-license",
         "7.6.0": "projects/fortigcp-project-001/global/images/fortinet-fmg-760-20240731-001-w-license",
         "7.6.1": "projects/fortigcp-project-001/global/images/fortinet-fmg-761-20241025-001-w-license",
         "7.6.2": "projects/fortigcp-project-001/global/images/fortinet-fmg-762-20241218-001-w-license",
@@ -284,6 +293,7 @@
         "7.6.4": "projects/fortigcp-project-001/global/images/fortinet-fmg-764-20250902-001-w-license",
         "7.6.5": "projects/fortigcp-project-001/global/images/fortinet-fmg-765-20251217-001-w-license",
         "7.6.6": "projects/fortigcp-project-001/global/images/fortinet-fmg-766-20260212-001-w-license",
+        "7.6.7": "projects/fortigcp-project-001/global/images/fortinet-fmg-767-20260604-001-w-license",
         "8.0.0": "projects/fortigcp-project-001/global/images/fortinet-fmg-800-20260423-001-w-license"
     },
     "fortianalyzer": {
@@ -348,6 +358,7 @@
         "7.4.8": "projects/fortigcp-project-001/global/images/fortinet-faz-748-20251003-001-w-license",
         "7.4.9": "projects/fortigcp-project-001/global/images/fortinet-faz-749-20260120-001-w-license",
         "7.4.10": "projects/fortigcp-project-001/global/images/fortinet-faz-7410-20260212-001-w-license",
+        "7.4.11": "projects/fortigcp-project-001/global/images/fortinet-faz-7411-20260511-001-w-license",
         "7.6.0": "projects/fortigcp-project-001/global/images/fortinet-faz-760-20240801-001-w-license",
         "7.6.1": "projects/fortigcp-project-001/global/images/fortinet-faz-761-20241025-001-w-license",
         "7.6.2": "projects/fortigcp-project-001/global/images/fortinet-faz-762-20241218-001-w-license",
@@ -355,6 +366,7 @@
         "7.6.4": "projects/fortigcp-project-001/global/images/fortinet-faz-764-20250902-001-w-license",
         "7.6.5": "projects/fortigcp-project-001/global/images/fortinet-faz-765-20251217-001-w-license",
         "7.6.6": "projects/fortigcp-project-001/global/images/fortinet-faz-766-20260212-001-w-license",
+        "7.6.7": "projects/fortigcp-project-001/global/images/fortinet-faz-767-20260604-001-w-license",
         "8.0.0": "projects/fortigcp-project-001/global/images/fortinet-faz-800-20260423-001-w-license"
     },
     "fortiguest": {
@@ -373,6 +385,7 @@
         "2.1.0": "projects/fortigcp-project-001/global/images/fortiaiops-210-build0313-lic",
         "3.0.1": "projects/fortigcp-project-001/global/images/fortiaiops-301-build0030-lic",
         "3.2.0": "projects/fortigcp-project-001/global/images/fortiaiops-320-build0139-lic",
-        "3.2.1": "projects/fortigcp-project-001/global/images/fortiaiops-321-build0158-lic"
+        "3.2.1": "projects/fortigcp-project-001/global/images/fortiaiops-321-build0158-lic",
+        "3.4.0": "projects/fortigcp-project-001/global/images/fortiaiops-340-build0259-lic"
     }
 }
